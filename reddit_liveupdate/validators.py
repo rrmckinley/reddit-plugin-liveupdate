@@ -39,15 +39,16 @@ class VLiveUpdate(VLiveUpdateID):
         self.set_error(errors.NO_THING_ID)
 
 
-class VLiveUpdateEventManager(Validator):
+class VLiveUpdatePermission(Validator):
+    def __init__(self, permission):
+        self.permission = permission
+        Validator.__init__(self)
+
     def run(self):
-        if not c.liveupdate_can_manage:
+        if not c.liveupdate_event.state == "live":
             abort(403, "Forbidden")
 
-
-class VLiveUpdateEventReporter(Validator):
-    def run(self):
-        if not c.liveupdate_can_edit:
+        if self.permission not in c.liveupdate_permissions:
             abort(403, "Forbidden")
 
 
